@@ -38,7 +38,7 @@ if __name__ == '__main__':
 
     for f in formats:
 
-        # I want the lowest resolution, so I set resolution as 144p
+        # Get resolution
         if f.get('format_note',None) == Quality:
 
             #get the video url
@@ -56,7 +56,7 @@ if __name__ == '__main__':
     else:
         for f in formats:
             # I want the lowest resolution, so I set resolution as 144p
-            if f.get('format_note',None) == '480p':
+            if f.get('format_note',None) == '144p':
 
                 print(f"Sorry {str(Quality)} is not available, here is 360p instead:")
 
