@@ -187,7 +187,7 @@ def gender_predict(video):
 
             # Display processed image
             cv2.imshow("Gender Estimator", frame)
-            cv2.imwrite('/Users/kethanpabbi/Desktop/Thesis/Proj1/video_frames/'+str(total_fps)+'.jpg',frame)
+            cv2.imwrite('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/video_frames/'+str(total_fps)+'.jpg',frame)
             
             # Quit midway
             if cv2.waitKey(1) == ord("q"):
@@ -216,7 +216,7 @@ def natural_keys(text):
 def remove_frames():
     '''Delete frames'''
     # Delete frames
-    dir = '/Users/kethanpabbi/Desktop/Thesis/Proj1/video_frames/'
+    dir = '/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/video_frames/'
     for f in os.listdir(dir):
         os.remove(os.path.join(dir, f))
     
@@ -226,15 +226,15 @@ def img_to_vid():
     img_array = []
 
     # Make an array of frames to be combined
-    for filename in os.listdir('/Users/kethanpabbi/Desktop/Thesis/Proj1/video_frames/'):
-        img_array.append(os.path.join('/Users/kethanpabbi/Desktop/Thesis/Proj1/video_frames/',filename))
+    for filename in os.listdir('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/video_frames/'):
+        img_array.append(os.path.join('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/video_frames/',filename))
     
     # Sort the frames in order
     img_array.sort(key=natural_keys)
 
     # Combine to form MP4 with required fps
     clip = ImageSequenceClip(img_array, fps=fps) 
-    clip.write_videofile("/Users/kethanpabbi/Desktop/Thesis/Proj1/processed_video/"+str(title+format)+".mp4", fps=fps)
+    clip.write_videofile("/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/processed_video/"+str(title+format)+".mp4", fps=fps)
 
     remove_frames()
 
@@ -250,11 +250,11 @@ if __name__ == '__main__':
     #video_url = 'https://www.youtube.com/watch?v=87gWaABqGYs'
 
     #news
-    video_url = 'https://www.youtube.com/watch?v=0Iu4C0mT3dw'
+    #video_url = 'https://www.youtube.com/watch?v=0Iu4C0mT3dw'
 
     #video_url = 'https://www.youtube.com/watch?v=DUqqPCPll_g'
     
-    #video_url = 'https://www.youtube.com/watch?v=po02mFUhRTk'
+    video_url = 'https://www.youtube.com/watch?v=po02mFUhRTk'
     ydl_opts = {}
 
     # create youtube-dl object
@@ -273,7 +273,7 @@ if __name__ == '__main__':
     Quality = str(input('Enter Quality: 144p/ 240p/ 360p/ 480p/ 720p: '))
 
     # Check if the file with the format already exists
-    if os.path.exists('/Users/kethanpabbi/Desktop/Thesis/Proj1/processed_video/'+str(title+Quality)+'.mp4'):
+    if os.path.exists('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/processed_video/'+str(title+Quality)+'.mp4'):
         print('File already available to download!') 
     
     else:
@@ -305,7 +305,7 @@ if __name__ == '__main__':
                     print(f"Sorry {str(Quality)} is not available, here is 360p instead:")
                     format = '360p'
 
-                    if os.path.exists('/Users/kethanpabbi/Desktop/Thesis/Proj1/processed_video/'+str(title+format)+'.mp4'):
+                    if os.path.exists('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/processed_video/'+str(title+format)+'.mp4'):
                         print('File already available to download!') 
                         break
 
