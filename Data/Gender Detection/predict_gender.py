@@ -5,6 +5,8 @@ import numpy as np
 import os
 from moviepy.editor import *
 import youtube_dl
+import pandas as pd
+from openpyxl import load_workbook
 
 # The gender model architecture
 # https://drive.google.com/open?id=1W_moLzMlGiELyPxWiYQJ9KFaXroQ_NFQ
@@ -237,6 +239,23 @@ def img_to_vid():
     clip.write_videofile("/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/processed_video/"+str(title+format)+".mp4", fps=fps)
 
     remove_frames()
+
+def spreedsheet(male_fps, female_fps, non_human_fps):
+    # new dataframe with same columns
+    df = pd.DataFrame({'Title': str(title+format),
+                    'Duration': duration, 'Male Screen time': male_fps/fps,\
+                    'Female Screen Time': female_fps/fps, 'Non-Human Screen Time': non_human_fps/fps})
+    writer = pd.ExcelWriter('Stats.xlsx', engine='openpyxl')
+    # try to open an existing workbook
+    writer.book = load_workbook('Stats.xlsx')
+    # copy existing sheets
+    writer.sheets = dict((ws.title, ws) for ws in writer.book.worksheets)
+    # read existing file
+    reader = pd.read_excel(r'Stats.xlsx')
+    # write out the new sheet
+    df.to_excel(writer,index=False,header=False,startrow=len(reader)+1)
+
+    writer.close()
 
 if __name__ == '__main__':
 
