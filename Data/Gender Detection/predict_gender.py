@@ -243,7 +243,8 @@ def img_to_vid():
 
 def spreedsheet(male_fps, female_fps, non_human_fps):
     # new dataframe with same columns
-    df = pd.DataFrame({'Title': str(title+format),
+    name = str(title+format)
+    df = pd.DataFrame({'Title': 'h',
                     'Duration': duration, 'Male Screen time': male_fps/fps,\
                     'Female Screen Time': female_fps/fps, 'Non-Human Screen Time': non_human_fps/fps})
     writer = pd.ExcelWriter('Stats.xlsx', engine='openpyxl')
@@ -274,7 +275,13 @@ if __name__ == '__main__':
 
     #video_url = 'https://www.youtube.com/watch?v=DUqqPCPll_g'
     
-    video_url = 'https://www.youtube.com/watch?v=po02mFUhRTk'
+    #video_url = 'https://www.youtube.com/watch?v=po02mFUhRTk'
+
+    #friends
+    #video_url = 'https://www.youtube.com/watch?v=cB-DVomcEb4'
+
+    #funny
+    video_url = 'https://www.youtube.com/watch?v=dlx8TanWFys'
     ydl_opts = {}
 
     # create youtube-dl object
