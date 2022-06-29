@@ -247,23 +247,8 @@ def spreedsheet(male_fps, female_fps, non_human_fps):
     df = pd.DataFrame({'Title': [name],
                     'Duration': duration, 'Male Screen time': male_fps/fps,\
                     'Female Screen Time': female_fps/fps, 'Non-Human Screen Time': non_human_fps/fps})
-    writer = pd.ExcelWriter('Stats.xlsx', engine='xlsxwriter')
     # Convert the dataframe to an XlsxWriter Excel object.
-    df.to_excel(writer, sheet_name='Sheet1', index=False)
-
-    # Close the Pandas Excel writer and output the Excel file.
-    writer.save()
-
-    # try to open an existing workbook
-    writer.book = load_workbook('Stats.xlsx')
-    # copy existing sheets
-    writer.sheets = dict((ws.title, ws) for ws in writer.book.worksheets)
-    # read existing file
-    reader = pd.read_excel(r'Stats.xlsx')
-    # write out the new sheet
-    df.to_excel(writer,index=False,header=False,startrow=len(reader)+1)
-
-    writer.close()
+    df.to_excel('Stats.xlsx', sheet_name='Sheet1', index=False)
 
 if __name__ == '__main__':
 
