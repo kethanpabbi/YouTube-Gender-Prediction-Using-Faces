@@ -202,6 +202,7 @@ def gender_predict(video):
     non_human_fps = 0
     if male_fps + female_fps <= total_fps:
         non_human_fps = total_fps - (male_fps + female_fps)
+        spreedsheet(male_fps, female_fps, non_human_fps)
         return print(f'Total Duration: {duration:.3f}\nMale Screen Time: {male_fps/fps:.3f}\nFemale Screen Time:{female_fps/fps:.3f}\nTotal Non-Human Time: {non_human_fps/fps:.3f}')
 
 def alpha_num(text):
