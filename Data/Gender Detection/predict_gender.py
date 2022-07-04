@@ -40,7 +40,7 @@ frame_width = 1280
 frame_height = 720
 
 
-def get_faces(frame, confidence_threshold=0.5):
+def get_faces(frame, confidence_threshold=0.8):
     '''Detect all the faces present in a frame'''
    
     # convert the frame into a blob to be ready for NN input
@@ -262,7 +262,7 @@ if __name__ == '__main__':
     #video_url = 'https://www.youtube.com/watch?v=87gWaABqGYs'
 
     #news
-    video_url = 'https://www.youtube.com/watch?v=0Iu4C0mT3dw'
+    #video_url = 'https://www.youtube.com/watch?v=0Iu4C0mT3dw'
 
     #video_url = 'https://www.youtube.com/watch?v=DUqqPCPll_g'
     
@@ -273,6 +273,9 @@ if __name__ == '__main__':
 
     #funny
     #video_url = 'https://www.youtube.com/watch?v=dlx8TanWFys'
+
+    #ancor
+    video_url = 'https://www.youtube.com/watch?v=SHP-QWXUYoQ'
     ydl_opts = {}
 
     # create youtube-dl object
