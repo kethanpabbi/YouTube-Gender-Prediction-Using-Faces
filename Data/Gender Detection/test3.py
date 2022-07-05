@@ -9,9 +9,9 @@ mp_face_detection = mp.solutions.face_detection
 mp_drawing = mp.solutions.drawing_utils
 
 
-# For webcam input:
+
 with mp_face_detection.FaceDetection(
-    model_selection=1, min_detection_confidence=0.75) as face_detection:
+    model_selection=1, min_detection_confidence=0.5) as face_detection:
   while cap.isOpened():
     success, image = cap.read()
     if not success:
