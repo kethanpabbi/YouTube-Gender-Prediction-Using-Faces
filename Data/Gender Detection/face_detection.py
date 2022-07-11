@@ -3,11 +3,12 @@ import cv2
 import time
 
 class FaceDetector():
-    def __init__(self, minDetectionCon=0.5):
+    def __init__(self, minDetectionCon=0.75, model=1):
         self.minDetectionCon = minDetectionCon
+        self.model = model
         self.mpFaceDetection = mp.solutions.face_detection
         self.mpDraw = mp.solutions.drawing_utils
-        self.faceDetection = self.mpFaceDetection.FaceDetection(model_selection=1, min_detection_confidence=0.5)
+        self.faceDetection = self.mpFaceDetection.FaceDetection(model_selection=model, min_detection_confidence=self.minDetectionCon)
 
     def findFaces(self, frame, draw=True):
         self.frameRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -29,6 +30,15 @@ class FaceDetector():
 
         return frame, bboxs
     
+    def get_optimal_font_scale(self, text, width):
+        '''Determine the optimal font scale based on the hosting frame width'''
+
+        for scale in reversed(range(0, 60, 1)):
+            textSize = cv2.getTextSize(text, fontFace=cv2.FONT_HERSHEY_DUPLEX, fontScale=scale/10, thickness=1)
+            new_width = textSize[0][0]
+            if (new_width <= width):
+                return scale/10
+        return 1
     
 
 
@@ -39,12 +49,11 @@ def main():
     detector = FaceDetector()
     while True:
         success, frame = cap.read()
-        frame = detector.findFaces(frame)
+        frame, bboxs = detector.findFaces(frame)
         cTime = time.time()
         fps = 1/(cTime-pTime)
         pTime = cTime
-        cv2.putText(frame, f'FPS: {int(fps)}', (20,70), cv2.FONT_HERSHEY_COMPLEX,\
-            3, (0,0,255), 2)
+
         cv2.imshow("Frame", frame)
         cv2.waitKey(1)
 
