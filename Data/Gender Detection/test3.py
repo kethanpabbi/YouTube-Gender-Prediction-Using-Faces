@@ -5,6 +5,8 @@ import time
 
 cap = cv2.VideoCapture('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/Joey turns 30 (Friends).mp4')
 
+#cap = cv2.VideoCapture(0)
+
 mp_face_detection = mp.solutions.face_detection
 mp_drawing = mp.solutions.drawing_utils
 
@@ -30,6 +32,7 @@ with mp_face_detection.FaceDetection(
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
     if results.detections:
       for detection in results.detections:
+        print(results)
         mp_drawing.draw_detection(image, detection)
     # Flip the image horizontally for a selfie-view display.
     cv2.imshow('MediaPipe Face Detection', image)
