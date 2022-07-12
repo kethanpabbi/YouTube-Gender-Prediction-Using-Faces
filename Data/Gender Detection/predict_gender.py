@@ -6,7 +6,10 @@ import os
 from moviepy.editor import *
 import youtube_dl
 import pandas as pd
-from openpyxl import load_workbook
+from retinaface import RetinaFace as rf
+import cvlib as cv
+from deepface import DeepFace as dp
+import numpy as np
 
 # The gender model architecture
 # https://drive.google.com/open?id=1W_moLzMlGiELyPxWiYQJ9KFaXroQ_NFQ
@@ -262,7 +265,7 @@ if __name__ == '__main__':
     #video_url = 'https://www.youtube.com/watch?v=87gWaABqGYs'
 
     #news
-    #video_url = 'https://www.youtube.com/watch?v=0Iu4C0mT3dw'
+    video_url = 'https://www.youtube.com/watch?v=0Iu4C0mT3dw'
 
     #video_url = 'https://www.youtube.com/watch?v=DUqqPCPll_g'
     
@@ -275,7 +278,7 @@ if __name__ == '__main__':
     #video_url = 'https://www.youtube.com/watch?v=dlx8TanWFys'
 
     #ancor
-    video_url = 'https://www.youtube.com/watch?v=SHP-QWXUYoQ'
+    #video_url = 'https://www.youtube.com/watch?v=SHP-QWXUYoQ'
     ydl_opts = {}
 
     # create youtube-dl object
