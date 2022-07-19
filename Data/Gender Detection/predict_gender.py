@@ -265,11 +265,11 @@ if __name__ == '__main__':
     #video_url = 'https://www.youtube.com/watch?v=87gWaABqGYs'
 
     #news
-    video_url = 'https://www.youtube.com/watch?v=0Iu4C0mT3dw'
+    #video_url = 'https://www.youtube.com/watch?v=0Iu4C0mT3dw'
 
     #video_url = 'https://www.youtube.com/watch?v=DUqqPCPll_g'
     
-    #video_url = 'https://www.youtube.com/watch?v=po02mFUhRTk'
+    video_url = 'https://www.youtube.com/watch?v=BzLO2OKt3OU'
 
     #friends
     #video_url = 'https://www.youtube.com/watch?v=cB-DVomcEb4'
@@ -340,3 +340,5 @@ if __name__ == '__main__':
                         gender_predict(url)
                         img_to_vid()
                         break
+
+

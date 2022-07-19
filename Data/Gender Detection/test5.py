@@ -6,8 +6,8 @@ import time
 
 start_time = time.time()
 total_fps = 0
-cap = cv2.VideoCapture('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/Joey turns 30 (Friends).mp4')
-
+#cap = cv2.VideoCapture('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/Joey turns 30 (Friends).mp4')
+cap = cv2.VideoCapture('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/Make It Extraordinary Albert Bartlett 10 Sec TV Ad 2021.mp4')
 # path = 'img1.jpg'
 # img = cv2.imread(path)
 
@@ -16,27 +16,31 @@ frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 duration = frame_count/fps
 print(f'Duration:{duration:.3f}, FPS:{int(fps)}, Total Frames:{frame_count}')
 
-try:
-    while True:
+while True:
         total_fps += 1
         success, frame = cap.read()
         obj = rf.detect_faces(frame, threshold = 0.5)
+        print(obj)
+        if type(obj) != dict:
+            print('y')
+            cv2.imshow("Gender Estimator", frame)
+            cv2.imwrite('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/video_frames/'+str(total_fps)+'.jpg',frame)
+        else:
+            for key in obj.keys():
+                identity = obj[key]
+                
+                face_area = identity["facial_area"]
+                cv2.imwrite('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/video_frames/0.jpg', frame[face_area[1]:face_area[3], face_area[0]:face_area[2]])
+                dpa = dp.analyze('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/video_frames/0.jpg', actions = ["gender"],enforce_detection=False, detector_backend = 'dlib')
+                label = dpa['gender']
 
-        for key in obj.keys():
-            identity = obj[key]
-            
-            face_area = identity["facial_area"]
-            cv2.imwrite('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/video_frames/0.jpg', frame[face_area[1]:face_area[3], face_area[0]:face_area[2]])
-            dpa = dp.analyze('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/video_frames/0.jpg', actions = ["gender"],enforce_detection=False, detector_backend = 'dlib')
-            label = dpa['gender']
-
-            box_color = (255, 0, 0) if label == "Man" else (147, 20, 255)
-            img = cv2.rectangle(frame, (face_area[2], face_area[3]), (face_area[0], face_area[1]), box_color, 1)
-            
-            cv2.putText(frame, label, (face_area[0],face_area[1]), cv2.FONT_HERSHEY_SIMPLEX, 0.7, box_color, 2)
-            # label = dpa['gender']
-        cv2.imwrite('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/video_frames/'+str(total_fps)+'.jpg',frame)
-        # cv2.imshow('', frame[face_area[3]:face_area[1], face_area[2]:face_area[0]])
+                box_color = (255, 0, 0) if label == "Man" else (147, 20, 255)
+                img = cv2.rectangle(frame, (face_area[2], face_area[3]), (face_area[0], face_area[1]), box_color, 1)
+                
+                cv2.putText(frame, label, (face_area[0],face_area[1]), cv2.FONT_HERSHEY_SIMPLEX, 0.7, box_color, 2)
+                # label = dpa['gender']
+            cv2.imwrite('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/video_frames/'+str(total_fps)+'.jpg',frame)
+            # cv2.imshow('', frame[face_area[3]:face_area[1], face_area[2]:face_area[0]])
             # cv2.waitKey(30)
         
 
@@ -48,7 +52,6 @@ try:
         
         #cv2.imwrite('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/video_frames/'+str(total_fps)+'.jpg',frame)
         #cv2.imshow("Gender Estimator", frameRGB)
-except: Exception
 
 # obj1 = dp.analyze('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/video_frames/img2.jpg',actions = ["gender"], detector_backend = 'retinaface')
 # print(obj1)
