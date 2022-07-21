@@ -12,6 +12,7 @@ from deepface import DeepFace as dp
 import numpy as np
 import time
 
+
 start_time = time.time()
 
 def gender_predict(video):
@@ -52,7 +53,7 @@ def gender_predict(video):
                     
                     face_area = identity["facial_area"]
                     cv2.imwrite('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/video_frames/0.jpg', frame[face_area[1]:face_area[3], face_area[0]:face_area[2]])
-                    dpa = dp.analyze('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/video_frames/0.jpg', actions = ["gender"],enforce_detection=False, detector_backend = 'ssd')
+                    dpa = dp.analyze('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/video_frames/0.jpg', actions = ["gender"],enforce_detection=False, detector_backend = 'dlib')
                     label = dpa['gender']
 
                     box_color = (255, 0, 0) if label == "Man" else (147, 20, 255)
@@ -84,7 +85,6 @@ def gender_predict(video):
     non_human_fps = 0
     if male_fps + female_fps <= total_fps:
         non_human_fps = total_fps - (male_fps + female_fps)
-        spreedsheet(male_fps, female_fps, non_human_fps)
         return print(f'Total Duration: {duration:.3f}\nMale Screen Time: {male_fps/fps:.3f}\nFemale Screen Time:{female_fps/fps:.3f}\nTotal Non-Human Time: {non_human_fps/fps:.3f}')
 
 def alpha_num(text):
@@ -119,24 +119,15 @@ def img_to_vid():
     img_array.sort(key=natural_keys)
 
     # Combine to form MP4 with required fps
-    clip = ImageSequenceClip(img_array, fps=23) 
-    clip.write_videofile("/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/processed_video/"+str(title+format)+"RetinaFace.mp4", fps=int(fps))
+    clip = ImageSequenceClip(img_array, fps=fps) 
+    clip.write_videofile("/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/processed_video/"+str(title+quality)+"RetinaFaceMtcnn.mp4", fps=int(fps))
 
     remove_frames()
-
-def spreedsheet(male_fps, female_fps, non_human_fps):
-    # new dataframe with same columns
-    name = str(title+format)
-    df = pd.DataFrame({'Title': [name],
-                    'Duration': duration, 'Male Screen time': male_fps/fps,\
-                    'Female Screen Time': female_fps/fps, 'Non-Human Screen Time': non_human_fps/fps})
-    # Convert the dataframe to an XlsxWriter Excel object.
-    df.to_excel('Stats.xlsx', sheet_name='Sheet1', index=False)
 
 if __name__ == '__main__':
 
     global title
-    global format
+    global quality
 
     #cat
     #video_url = 'https://www.youtube.com/watch?v=HECa3bAFAYkq'
@@ -149,7 +140,7 @@ if __name__ == '__main__':
 
     #video_url = 'https://www.youtube.com/watch?v=DUqqPCPll_g'
     
-    video_url = 'https://www.youtube.com/watch?v=BzLO2OKt3OU'
+    #video_url = 'https://www.youtube.com/watch?v=BzLO2OKt3OU'
 
     #friends
     #video_url = 'https://www.youtube.com/watch?v=cB-DVomcEb4'
@@ -159,13 +150,14 @@ if __name__ == '__main__':
 
     #ancor
     #video_url = 'https://www.youtube.com/watch?v=SHP-QWXUYoQ'
+    video_url = 'https://www.youtube.com/watch?v=BzLO2OKt3OU'
     ydl_opts = {}
 
     # create youtube-dl object
     ydl = youtube_dl.YoutubeDL(ydl_opts)
 
     # set video url, extract video information
-    info_dict = ydl.extract_info(video_url, download=True)
+    info_dict = ydl.extract_info(video_url, download=False)
 
     # video title
     title = alpha_num(info_dict['title'])
@@ -174,51 +166,16 @@ if __name__ == '__main__':
     # get video formats available
     formats = info_dict.get('formats',None)
 
-    Quality = str(input('Enter Quality: 144p/ 240p/ 360p/ 480p/ 720p: '))
+    quality = str(input('Enter Quality: 144p/ 240p/ 360p/ 480p/ 720p: '))
     
     # Check if the file with the format already exists
-    if os.path.exists('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/processed_video/'+str(title+Quality)+'RetinaFace.mp4'):
+    if os.path.exists('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/processed_video/'+str(title+quality)+'RetinaFaceMtcnn.mp4'):
         print('File already available to download!') 
     
     else:
-        # url
-        url = ''
+        path = '/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/video/Make It Extraordinary Albert Bartlett 10 Sec TV Ad 2021.mp4'
+        gender_predict(path)
+        img_to_vid()
 
-        for f in formats:
-
-            # Get right format
-            if f.get('format_note',None) == Quality:
-
-                format = Quality
-
-                #get the video url
-                url = f.get('url',None)
-                break
-        
-        if url != '':
-
-            gender_predict(url)
-            img_to_vid()
-
-        else:
-            for f in formats:
-
-                # Set default to 360p
-                if f.get('format_note',None) == '360p':
-
-                    print(f"Sorry {str(Quality)} is not available, here is 360p instead:")
-                    format = '360p'
-
-                    if os.path.exists('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/processed_video/'+str(title+format)+'.mp4'):
-                        print('File already available to download!') 
-                        break
-
-                    else:
-                        #get the video url
-                        url = f.get('url',None)
-
-                        gender_predict(url)
-                        img_to_vid()
-                        break
     end_time = time.time()
     print(f"Execution time: {end_time-start_time}")  #86 mins for a min long video
