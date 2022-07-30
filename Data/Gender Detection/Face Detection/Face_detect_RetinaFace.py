@@ -5,7 +5,7 @@ import time
 start_time = time.time()
  
 cap = cv2.VideoCapture("/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/Make It Extraordinary Albert Bartlett 10 Sec TV Ad 2021.mp4")
-count = 0
+count, face_count = 0, 0
 try:
     while True:
         # read frame from video 
@@ -19,6 +19,7 @@ try:
             count += 1
             # Loop over the faces detected
             for key in obj.keys():
+                face_count += 1
                 identity = obj[key]
                 
                 face_area = identity["facial_area"]
@@ -31,6 +32,7 @@ try:
             break
 except: Exception
 print(count)
+print(face_count)
 cap.release()
 cv2.destroyAllWindows()
 end_time = time.time()
