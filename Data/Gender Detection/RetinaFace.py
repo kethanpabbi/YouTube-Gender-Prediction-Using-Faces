@@ -24,6 +24,8 @@ def gender_predict(video):
     global duration
     global fps
     global frame_count
+    global count
+    count = 0
 
     try:
         # create a new cam object
@@ -47,6 +49,7 @@ def gender_predict(video):
                 cv2.imshow("Gender Estimator", frame)
                 cv2.imwrite('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/video_frames/'+str(total_fps)+'.jpg',frame)
             else:
+                count += 1
                 # Loop over the faces detected
                 for key in obj.keys():
                     identity = obj[key]
@@ -55,6 +58,12 @@ def gender_predict(video):
                     cv2.imwrite('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/video_frames/0.jpg', frame[face_area[1]:face_area[3], face_area[0]:face_area[2]])
                     dpa = dp.analyze('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/video_frames/0.jpg', actions = ["gender"],enforce_detection=False, detector_backend = 'dlib')
                     label = dpa['gender']
+                    if label == 'Man':
+                        male_fps += 1
+                        print('m')
+                    else: 
+                        female_fps += 1
+                        print('f')
 
                     box_color = (255, 0, 0) if label == "Man" else (147, 20, 255)
                     
@@ -83,9 +92,11 @@ def gender_predict(video):
         cv2.destroyAllWindows()
     except: Exception
     non_human_fps = 0
+    print(f'Count = {count}')
     if male_fps + female_fps <= total_fps:
         non_human_fps = total_fps - (male_fps + female_fps)
-        return print(f'Total Duration: {duration:.3f}\nMale Screen Time: {male_fps/fps:.3f}\nFemale Screen Time:{female_fps/fps:.3f}\nTotal Non-Human Time: {non_human_fps/fps:.3f}')
+        print(f'Total Duration: {duration:.3f}\nMale Screen Time: {male_fps/fps:.3f}\nFemale Screen Time:{female_fps/fps:.3f}\nTotal Non-Human Time: {non_human_fps/fps:.3f}')
+        return ""
 
 def alpha_num(text):
     return str(re.sub(r'[^A-Za-z0-9 ]+', '', text))

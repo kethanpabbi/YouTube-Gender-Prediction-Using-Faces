@@ -128,7 +128,9 @@ def gender_predict(video):
     total_fps = 0
     global duration
     global fps
+    global count
     global frame_count
+    count = 0
 
     try:
         # create a new cam object
@@ -153,6 +155,8 @@ def gender_predict(video):
             
             # predict the faces
             faces = get_faces(frame)
+            if faces != []:
+                count += 1
             
             # Loop over the faces detected
             for i, (start_x, start_y, end_x, end_y) in enumerate(faces):
@@ -243,6 +247,7 @@ def img_to_vid():
     clip.write_videofile("/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/processed_video/"+str(title+format)+".mp4", fps=fps)
 
     remove_frames()
+    print(count)
 
 def spreedsheet(male_fps, female_fps, non_human_fps):
     # new dataframe with same columns
