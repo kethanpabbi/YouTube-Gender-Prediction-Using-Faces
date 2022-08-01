@@ -2,8 +2,9 @@
 import cv2
 import numpy as np
 from facenet_pytorch import MTCNN
-import torch
+import dlib
 import time
+from mtcnn import MTCNN
 
 start_time = time.time()
 # Each Caffe Model impose the shape of the input image also image preprocessing is required like mean
@@ -70,18 +71,24 @@ def get_optimal_font_scale(text, width):
 
 def gender_predict():
     '''Predict the gender in a video'''
-    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
- 
-    #Create the model
-    mtcnn = MTCNN(keep_all=True, device=device)
+
+    detector = MTCNN()
+
+    male_fps = 0
+    female_fps = 0
     total_fps = 0
+    global duration
+    global fps
     global count
+    global frame_count
     count = 0
+    face_detect = dlib.cnn_face_detection_model_v1("/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/weights/mmod_human_face_detector.dat")
+
 
     try:
         # create a new cam object
         cap = cv2.VideoCapture("/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/Make It Extraordinary Albert Bartlett 10 Sec TV Ad 2021.mp4")
-
+        a,b = [],[]
         while True:
             total_fps += 1
             status, frame = cap.read()
@@ -89,14 +96,18 @@ def gender_predict():
             
             # predict the faces
             faces = get_faces(frame)
-            boxes, conf = mtcnn.detect(frame)
+            boxes = detector.detect_faces(frame)
 
-            # If there is no confidence that in the frame is a face, don't draw a rectangle around it
-            if conf[0] !=  None:
-                for (x, y, w, h) in boxes:
-                    x, y, w, h = int(x), int(y), int(w), int(h)
-                    cv2.rectangle(frame, (x, y), (w, h), (255, 255, 0), 1)
-
+            faces_d = face_detect(frame, 1)
+            
+            for face in faces_d:
+                count += 1
+                # In dlib in order to extract points we need to do this
+                x1 = face.rect.left()
+                y1 = face.rect.bottom()
+                x2 = face.rect.right()
+                y2 = face.rect.top()
+                cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 0), 1)
 
             # Loop over the faces detected
             for i, (start_x, start_y, end_x, end_y) in enumerate(faces):
@@ -110,7 +121,6 @@ def gender_predict():
             # Display processed image
             cv2.imshow("Gender Estimator", frame)
             cv2.imwrite('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/video_frames/'+str(total_fps)+'.jpg',frame)
-            
             # Quit midway
             if cv2.waitKey(1) == ord("q"):
                 break
@@ -119,7 +129,6 @@ def gender_predict():
         cv2.destroyAllWindows()
     except: Exception
     print(count)
-
 
 if __name__ == '__main__':
     gender_predict()

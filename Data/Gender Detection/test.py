@@ -44,7 +44,7 @@ def img_to_vid():
 
     # Combine to form MP4 with required fps
     clip = ImageSequenceClip(img_array, fps=23) 
-    clip.write_videofile("/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/processed_video/"+str(title+quality)+"RetinaFaceDlib.mp4", fps=int(fp))
+    clip.write_videofile("/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/processed_video/"+str(title+quality)+"Face_detect_FacenetDlib.mp4", fps=int(fp))
 
     remove_frames()
 

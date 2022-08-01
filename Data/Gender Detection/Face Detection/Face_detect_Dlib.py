@@ -14,9 +14,9 @@ try:
         frame = cv2.resize(frame, (600, 400))
     
         faces = face_detect(frame, 1)
-        if bool(faces):
-            count += 1
+            
         for face in faces:
+            count += 1
             # In dlib in order to extract points we need to do this
             x1 = face.rect.left()
             y1 = face.rect.bottom()

@@ -21,9 +21,9 @@ while True:
        boxes, conf = mtcnn.detect(frame)
 
       # If there is no confidence that in the frame is a face, don't draw a rectangle around it
-       if conf[0] !=  None:
-            count += 1
+       if conf[0] !=  None:     
             for (x, y, w, h) in boxes:
+                count += 1
                 text = f"{conf[0]*100:.2f}%"
                 x, y, w, h = int(x), int(y), int(w), int(h)
                 cv2.rectangle(frame, (x, y), (w, h), (255, 255, 255), 1)

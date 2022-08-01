@@ -89,11 +89,11 @@ def gender_predict():
             
             # predict the faces
             faces = get_faces(frame)
-            if faces != []:
-                count += 1
+                
             
             # Loop over the faces detected
             for i, (start_x, start_y, end_x, end_y) in enumerate(faces):
+                count += 1
                 face_img = frame[start_y: end_y, start_x: end_x]
 
                 blob = cv2.dnn.blobFromImage(image=face_img, scalefactor=1.0, size=(

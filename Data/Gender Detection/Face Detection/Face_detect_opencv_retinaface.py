@@ -2,8 +2,9 @@
 import cv2
 import numpy as np
 from facenet_pytorch import MTCNN
-import torch
+from retinaface import RetinaFace as rf
 import time
+from mtcnn import MTCNN
 
 start_time = time.time()
 # Each Caffe Model impose the shape of the input image also image preprocessing is required like mean
@@ -70,54 +71,50 @@ def get_optimal_font_scale(text, width):
 
 def gender_predict():
     '''Predict the gender in a video'''
-    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
- 
-    #Create the model
-    mtcnn = MTCNN(keep_all=True, device=device)
+
     total_fps = 0
     global count
     count = 0
 
-    try:
-        # create a new cam object
-        cap = cv2.VideoCapture("/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/Make It Extraordinary Albert Bartlett 10 Sec TV Ad 2021.mp4")
-
-        while True:
-            total_fps += 1
-            status, frame = cap.read()
-            frame = cv2.resize(frame, (600, 400))
-            
-            # predict the faces
-            faces = get_faces(frame)
-            boxes, conf = mtcnn.detect(frame)
-
-            # If there is no confidence that in the frame is a face, don't draw a rectangle around it
-            if conf[0] !=  None:
-                for (x, y, w, h) in boxes:
-                    x, y, w, h = int(x), int(y), int(w), int(h)
-                    cv2.rectangle(frame, (x, y), (w, h), (255, 255, 0), 1)
-
-
-            # Loop over the faces detected
-            for i, (start_x, start_y, end_x, end_y) in enumerate(faces):
-                face_img = frame[start_y: end_y, start_x: end_x]
-
-                blob = cv2.dnn.blobFromImage(image=face_img, scalefactor=1.0, size=(
-                    227, 227), mean=MODEL_MEAN_VALUES, swapRB=False, crop=False)
-
-                cv2.rectangle(frame, (start_x, start_y), (end_x, end_y), (255, 255, 255), 1)
-
-            # Display processed image
-            cv2.imshow("Gender Estimator", frame)
-            cv2.imwrite('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/video_frames/'+str(total_fps)+'.jpg',frame)
-            
-            # Quit midway
-            if cv2.waitKey(1) == ord("q"):
-                break
+    #try:
+    # create a new cam object
+    cap = cv2.VideoCapture("/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/Make It Extraordinary Albert Bartlett 10 Sec TV Ad 2021.mp4")
+    while True:
+        total_fps += 1
+        status, frame = cap.read()
+        frame = cv2.resize(frame, (600, 400))
         
-        # Cleanup
-        cv2.destroyAllWindows()
-    except: Exception
+        # predict the faces
+        faces = get_faces(frame)
+        obj = rf.detect_faces(frame, threshold = 0.75)
+
+        if type(obj) == dict:
+            # Loop over the faces detected
+            for key in obj.keys():
+                identity = obj[key]
+                
+                face_area = identity["facial_area"]
+                cv2.rectangle(frame, (face_area[2], face_area[3]), (face_area[0], face_area[1]), (255, 255, 0), 1)
+
+        # Loop over the faces detected
+        for i, (start_x, start_y, end_x, end_y) in enumerate(faces):
+            face_img = frame[start_y: end_y, start_x: end_x]
+
+            blob = cv2.dnn.blobFromImage(image=face_img, scalefactor=1.0, size=(
+                227, 227), mean=MODEL_MEAN_VALUES, swapRB=False, crop=False)
+
+            cv2.rectangle(frame, (start_x, start_y), (end_x, end_y), (255, 0, 255), 1)
+
+        # Display processed image
+        cv2.imshow("Gender Estimator", frame)
+        cv2.imwrite('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/video_frames/'+str(total_fps)+'.jpg',frame)
+        # Quit midway
+        if cv2.waitKey(1) == ord("q"):
+            break
+    
+    # Cleanup
+    cv2.destroyAllWindows()
+    #except: Exception
     print(count)
 
 
