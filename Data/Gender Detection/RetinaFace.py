@@ -55,15 +55,18 @@ def gender_predict(video):
                     identity = obj[key]
                     
                     face_area = identity["facial_area"]
-                    cv2.imwrite('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/video_frames/0.jpg', frame[face_area[1]:face_area[3], face_area[0]:face_area[2]])
+                    cv2.imwrite('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/video_frames/0.jpg', cv2.resize(frame[face_area[1]:face_area[3], face_area[0]:face_area[2]], (200,200)))
                     dpa = dp.analyze('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/video_frames/0.jpg', actions = ["gender"],enforce_detection=False, detector_backend = 'dlib')
+                    dpb = dp.analyze('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/video_frames/0.jpg', actions = ["gender"],enforce_detection=False, detector_backend = 'ssd')
+                    dpc = dp.analyze('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/video_frames/0.jpg', actions = ["gender"],enforce_detection=False, detector_backend = 'mtcnn')
+                    dpd = dp.analyze('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/video_frames/0.jpg', actions = ["gender"],enforce_detection=False, detector_backend = 'opencv')
+                    dpe = dp.analyze('/Users/kethanpabbi/Desktop/Thesis/YouTube-Gender-Prediction-Using-Faces/Data/Gender Detection/video_frames/0.jpg', actions = ["gender"],enforce_detection=False, detector_backend = 'retinaface')
                     label = dpa['gender']
+                    print(dpa['gender'], dpb['gender'], dpc['gender'], dpd['gender'], dpe['gender'])
                     if label == 'Man':
                         male_fps += 1
-                        print('m')
                     else: 
                         female_fps += 1
-                        print('f')
 
                     box_color = (255, 0, 0) if label == "Man" else (147, 20, 255)
                     
